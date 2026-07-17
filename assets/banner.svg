@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="Hungry Fin — Ocean Odyssey">
+  <defs>
+    <linearGradient id="journey" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7EDCE2"/>
+      <stop offset="0.42" stop-color="#2E86AB"/>
+      <stop offset="0.72" stop-color="#155E8A"/>
+      <stop offset="1" stop-color="#0F1B33"/>
+    </linearGradient>
+    <linearGradient id="depth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#05070F" stop-opacity="0.35"/>
+    </linearGradient>
+  </defs>
+
+  <!-- one gradient tells the whole journey: reef → open blue → abyss -->
+  <rect width="1280" height="320" fill="url(#journey)"/>
+  <rect width="1280" height="320" fill="url(#depth)"/>
+
+  <!-- waterline sine, sinking off-frame to the right -->
+  <path d="M0,46 Q60,34 120,46 T240,46 T360,46 T480,50 T600,54 T720,60 T840,68 T960,80 T1080,96 T1200,116 L1280,132"
+        fill="none" stroke="#EAF6FF" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+
+  <!-- god rays (left, shallow end) -->
+  <g opacity="0.14" fill="#ffffff">
+    <polygon points="90,46 140,46 260,320 150,320"/>
+    <polygon points="230,44 265,44 400,320 320,320"/>
+    <polygon points="345,46 372,46 520,320 460,320"/>
+  </g>
+
+  <!-- fleeing bait fish -->
+  <g fill="#EAF6FF" opacity="0.9">
+    <path d="M472,178 l26,-8 -8,8 8,8 z"/>
+    <path d="M512,164 l22,-7 -7,7 7,7 z" opacity="0.75"/>
+    <path d="M540,186 l19,-6 -6,6 6,6 z" opacity="0.6"/>
+  </g>
+
+  <!-- the fin itself: original stylized shark silhouette -->
+  <g>
+    <path d="M235,190
+             C280,150 360,132 430,140
+             C440,116 470,96 500,92
+             C492,112 490,128 496,142
+             C560,142 620,158 656,180
+             C640,190 620,200 596,207
+             C604,220 600,238 588,248
+             C580,234 568,224 552,219
+             C500,232 400,236 330,222
+             C310,240 288,250 268,252
+             C276,238 280,226 278,214
+             C260,208 244,200 235,190 Z"
+          fill="#12212E"/>
+    <!-- belly highlight (counter-shading) -->
+    <path d="M300,214 C360,228 480,228 545,217 C500,229 380,232 322,222 Z" fill="#EAF6FF" opacity="0.5"/>
+    <!-- eye -->
+    <circle cx="614" cy="182" r="6" fill="#EAF6FF"/>
+    <circle cx="616" cy="182" r="3" fill="#12212E"/>
+    <!-- bubbles -->
+    <g fill="none" stroke="#EAF6FF" stroke-width="2.5" opacity="0.65">
+      <circle cx="205" cy="176" r="7"/>
+      <circle cx="188" cy="156" r="5"/>
+      <circle cx="199" cy="136" r="3.5"/>
+    </g>
+  </g>
+
+  <!-- abyss bioluminescence (right, deep end) -->
+  <g>
+    <circle cx="1065" cy="210" r="4" fill="#B5179E" opacity="0.9"/>
+    <circle cx="1065" cy="210" r="9" fill="#B5179E" opacity="0.25"/>
+    <circle cx="1130" cy="150" r="3" fill="#4CC9F0" opacity="0.9"/>
+    <circle cx="1130" cy="150" r="8" fill="#4CC9F0" opacity="0.25"/>
+    <circle cx="1195" cy="245" r="4" fill="#4CC9F0" opacity="0.9"/>
+    <circle cx="1195" cy="245" r="10" fill="#4CC9F0" opacity="0.22"/>
+  </g>
+
+  <!-- title -->
+  <g font-family="'Arial Rounded MT Bold','Trebuchet MS','Segoe UI',system-ui,sans-serif">
+    <text x="700" y="150" font-size="64" font-weight="800" letter-spacing="6"
+          fill="#FFFFFF" stroke="#FFC93C" stroke-width="1.6" paint-order="stroke">HUNGRY FIN</text>
+    <text x="702" y="186" font-size="20" letter-spacing="10" fill="#CDEBF5">OCEAN ODYSSEY</text>
+    <text x="702" y="222" font-size="14" fill="#8FB8CC">a zero-asset, zero-build procedural browser game</text>
+  </g>
+</svg>

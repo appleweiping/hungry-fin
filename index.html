@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Hungry Fin — Ocean Odyssey</title>
+  <meta name="description" content="A zero-asset, zero-build procedural browser game. Eat, grow, survive. An open-source homage to the shark-survival genre.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%88%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/ui.css?v=110">
+</head>
+<body>
+  <canvas id="gl"></canvas>
+
+  <!-- DOM overlay root: all menus / HUD live here -->
+  <div id="ui">
+    <div id="hud" class="hidden"></div>
+    <div id="floaters"></div>
+    <div id="vignette-hurt"></div>
+    <div id="vignette-hunger"></div>
+    <div id="vignette-gold"></div>
+    <div id="flash-white"></div>
+    <div id="cine-bars"><div class="bar top"></div><div class="bar bot"></div></div>
+    <div id="touch-ui" class="hidden">
+      <div id="joy"><div id="joy-ring"></div><div id="joy-nub"></div></div>
+      <div id="btn-boost">⚡</div>
+    </div>
+    <div id="screens"></div>
+    <div id="toasts"></div>
+    <div id="boot">
+      <div class="boot-inner">
+        <div class="boot-logo">🦈</div>
+        <h1>HUNGRY FIN</h1>
+        <div class="boot-sub">Ocean Odyssey</div>
+        <button id="boot-start" class="btn btn-gold btn-big">▶ &nbsp;Dive In</button>
+        <div class="boot-hint">click to enable audio &amp; start</div>
+      </div>
+    </div>
+    <div id="fatal" class="hidden"></div>
+  </div>
+
+  <!-- ═══ Tier 1: core (zero deps) ═══ -->
+  <script src="vendor/three.min.js?v=110"></script>
+  <script src="js/core/core.js?v=110"></script>
+  <!-- ═══ Tier 2: data (deps: core) ═══ -->
+  <script src="js/data/palette.js?v=110"></script>
+  <script src="js/data/balance.js?v=110"></script>
+  <!-- ═══ Tier 3: audio + gfx (deps: core, data) ═══ -->
+  <script src="js/audio/audio.js?v=110"></script>
+  <script src="js/gfx/materials.js?v=110"></script>
+  <script src="js/gfx/modelKit.js?v=110"></script>
+  <script src="js/gfx/sharkBuilder.js?v=110"></script>
+  <script src="js/gfx/builders.js?v=110"></script>
+  <script src="js/gfx/water.js?v=110"></script>
+  <script src="js/gfx/environment.js?v=110"></script>
+  <script src="js/gfx/particles.js?v=110"></script>
+  <!-- ═══ Tier 4: game (deps: all above) ═══ -->
+  <script src="js/game/engine.js?v=110"></script>
+  <script src="js/game/save.js?v=110"></script>
+  <script src="js/game/input.js?v=110"></script>
+  <script src="js/game/cameraRig.js?v=110"></script>
+  <script src="js/game/entity.js?v=110"></script>
+  <script src="js/game/ai.js?v=110"></script>
+  <script src="js/game/spawner.js?v=110"></script>
+  <script src="js/game/player.js?v=110"></script>
+  <script src="js/game/combat.js?v=110"></script>
+  <script src="js/game/systems.js?v=110"></script>
+  <script src="js/game/boss.js?v=110"></script>
+  <script src="js/game/progression.js?v=110"></script>
+  <!-- ═══ Tier 5: ui + assembly ═══ -->
+  <script src="js/ui/hud.js?v=110"></script>
+  <script src="js/ui/screens.js?v=110"></script>
+  <script src="js/ui/shop.js?v=110"></script>
+  <script src="js/main.js?v=110"></script>
+</body>
+</html>
