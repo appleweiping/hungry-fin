@@ -122,8 +122,17 @@
   D.byId = {};
   D.CREATURES.forEach(function (c) { D.byId[c.id] = c; });
 
-  /* spawn population target per zone */
-  D.SPAWN = { TARGET: [55, 65, 60], RING_IN: 1.25, RING_W: 26, DESPAWN: 3.2, AUDIT: 0.5 };
+  /* spawn population target per zone. New creatures appear in a ring just
+     off-screen (RING_IN × view radius, RING_W wide) and within VRANGE metres
+     of the player's depth; anything past the ring + DESPAWN_MARGIN is
+     recycled. During the first OPENING_SECS of a run the target is raised
+     and anything that can hurt you is rarer, so the start is busy but fair. */
+  D.SPAWN = {
+    TARGET: [55, 65, 60], RING_IN: 1.25, RING_W: 16, DESPAWN_MARGIN: 18,
+    VRANGE: 14, WARMUP_IN: 0.4,
+    OPENING_SECS: 30, OPENING_MULT: 1.5, OPENING_DANGER_W: 0.35,
+    AUDIT: 0.5
+  };
 
   /* ── bosses ───────────────────────────────────────────── */
   D.BOSSES = [

@@ -20,9 +20,37 @@
     return Math.max(half, 9);
   }
 
-  function pickSpawnPos(def, px, py) {
+  /* Vertical half-height of the band creatures are spawned in. The small
+     starting shark sees only ~7 m of water top to bottom, so spreading the
+     population over the whole 2–40 m depth range left the screen empty most
+     of the time. Spawning near the player's depth keeps things on screen. */
+  function verticalRange() {
+    var cam = HF.Camera.cam;
+    var halfH = (cam ? cam.position.z : 24) * Math.tan(25 * Math.PI / 180);
+    if (!isFinite(halfH)) halfH = 8;
+    return Math.max(D.SPAWN.VRANGE, halfH * 2.2);
+  }
+
+  /* first seconds of a run: more food, fewer things that can hurt you */
+  function inOpening() {
+    var run = HF.Progress && HF.Progress.run;
+    return HF.Game && HF.Game.state === 'PLAYING' && run && run.time < D.SPAWN.OPENING_SECS;
+  }
+
+  function isBottom(def) { return !!(def.mods && def.mods.indexOf('bottom') >= 0); }
+
+  /* can this species live anywhere near the player's depth? (otherwise it
+     would be spawned and recycled again on every audit) */
+  function reachable(def, px, py, vr) {
+    if (isBottom(def)) return Math.abs(HF.World.floorY(px) - py) <= vr;
+    var depth = -py;
+    return def.depth[0] <= depth + vr && def.depth[1] >= depth - vr;
+  }
+
+  function pickSpawnPos(def, px, py, innerMul) {
     var R = viewRadius();
-    var inner = R * D.SPAWN.RING_IN;
+    var inner = R * (innerMul || D.SPAWN.RING_IN);
+    var vr = verticalRange();
     for (var tries = 0; tries < 8; tries++) {
       var side = Math.random() < 0.5 ? -1 : 1;
       var x = px + side * (inner + Math.random() * D.SPAWN.RING_W);
@@ -33,11 +61,14 @@
       var floor = HF.World.floorY(x);
       var y;
       if (def.proto === 'surface') y = HF.Water.heightAt(x) - 0.2;
+      else if (isBottom(def)) y = floor + def.r + 0.2;
       else {
         var top = -Math.max(def.depth[0], 0.5);
         var bot = Math.max(-def.depth[1], floor + def.r + 0.5);
         if (top <= bot) continue;
-        y = M.rand(bot, top);
+        /* prefer the player's depth; fall back to the species' full band */
+        var bTop = Math.min(top, py + vr), bBot = Math.max(bot, py - vr);
+        y = bTop > bBot ? M.rand(bBot, bTop) : M.rand(bot, top);
       }
       return { x: x, y: y };
     }
@@ -47,9 +78,11 @@
   HF.Spawner = {
     reset: function () { auditT = 0; },
 
-    /* pre-fill around a position (run start) */
+    /* pre-fill around a position (run start). The first fill may place
+       creatures inside the view so the opening screen isn't empty. */
     warmup: function (px, py, boostFood) {
-      for (var k = 0; k < 3; k++) HF.Spawner.audit(px, py, true);
+      HF.Spawner.audit(px, py, true, D.SPAWN.WARMUP_IN);
+      for (var k = 0; k < 2; k++) HF.Spawner.audit(px, py, true);
       if (boostFood) {
         /* first-bite guarantee: a fat school right in front of the player */
         var anchor = { x: px + 10, y: py, vx: 0.4, vy: 0, t: 3 };
@@ -61,13 +94,18 @@
       }
     },
 
-    audit: function (px, py, instant) {
+    audit: function (px, py, instant, innerMul) {
       var zi = HF.World.zoneIndexAt(px);
-      var target = D.SPAWN.TARGET[zi];
+      var opening = inOpening();
+      var target = Math.round(D.SPAWN.TARGET[zi] * (opening ? D.SPAWN.OPENING_MULT : 1));
       var R = viewRadius();
+      var vr = verticalRange();
+      var pyc = Math.min(py, 0);   // mid-jump counts as at the surface
       /* population is strictly LOCAL: anything past the spawn ring + margin
-         is recycled, so the target count always surrounds the player */
-      var despawnR = R * D.SPAWN.RING_IN + D.SPAWN.RING_W + 30;
+         (sideways or vertically) is recycled, so the target count always
+         surrounds the player */
+      var despawnR = R * D.SPAWN.RING_IN + D.SPAWN.RING_W + D.SPAWN.DESPAWN_MARGIN;
+      var despawnV = vr + D.SPAWN.DESPAWN_MARGIN;
 
       /* recycle far entities + census */
       for (var id in counts) counts[id] = 0;
@@ -75,7 +113,7 @@
       var total = 0;
       for (var i = list.length - 1; i >= 0; i--) {
         var e = list[i];
-        if (Math.abs(e.x - px) > despawnR) { HF.Entities.despawn(e); continue; }
+        if (Math.abs(e.x - px) > despawnR || Math.abs(e.y - pyc) > despawnV) { HF.Entities.despawn(e); continue; }
         counts[e.def.id] = (counts[e.def.id] || 0) + 1;
         total++;
       }
@@ -86,11 +124,13 @@
       var candidates = [];
       D.CREATURES.forEach(function (def) {
         if (def.zones.indexOf(zi) < 0 && !(zi > 0 && def.zones.indexOf(zi - 1) >= 0)) return;
+        if (!reachable(def, px, pyc, vr)) return;
         var cur = counts[def.id] || 0;
         if (cur >= def.cap) return;
         /* small fish dominate; big things stay rare */
         var w = def.tier <= 2 ? 6 : def.tier === 3 ? 3 : def.tier <= 5 ? 1.6 : 0.7;
         if (def.proto === 'hazard') w *= 0.8;
+        if (opening && def.dmg) w *= D.SPAWN.OPENING_DANGER_W;
         candidates.push({ def: def, w: w * (1 - cur / def.cap) });
       });
       if (!candidates.length) return;
@@ -103,7 +143,7 @@
           r -= candidates[c].w;
           if (r <= 0) { def = candidates[c].def; break; }
         }
-        var pos = pickSpawnPos(def, px, py);
+        var pos = pickSpawnPos(def, px, pyc, innerMul);
         if (pos) {
           if (def.proto === 'school' && def.school) {
             var n = M.randi(def.school[0], def.school[1]);
