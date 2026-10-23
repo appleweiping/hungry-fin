@@ -203,7 +203,10 @@ select { pointer-events: auto; background: var(--c-dark); color: var(--c-text); 
 
 /* narrow screens */
 @media (max-width: 700px) {
-  #hud .top-left { width: 46vw; }
+  /* stop the bars short of the centred pause button */
+  #hud .top-left { width: calc(50vw - 56px); }
+  #title-foot { font-size: 11px; gap: 12px; align-items: flex-end; }
+  #title-foot span:last-child { white-space: nowrap; }
   #score-num { font-size: 22px; }
   .panel { padding: 18px; }
   #shop-body { flex-direction: column; }
