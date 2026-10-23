@@ -129,7 +129,7 @@
     var el = document.getElementById('fatal');
     if (!el) return;
     el.classList.remove('hidden');
-    el.textContent = '🦈 Hungry Fin hit a rock.\n\n' +
+    el.textContent = '🦈 Brinefin hit a rock.\n\n' +
       (ev.message || 'unknown error') + '\n' +
       (ev.filename || '') + ':' + (ev.lineno || '') + '\n\n' +
       'Please report this at github — include the text above.\n' +

@@ -99,7 +99,7 @@
       var el = document.getElementById('fatal');
       if (el) {
         el.classList.remove('hidden');
-        el.textContent = '🦈 Hungry Fin hit a rock mid-swim.\n\n' + e.message + '\n\n' + (e.stack || '');
+        el.textContent = '🦈 Brinefin hit a rock mid-swim.\n\n' + e.message + '\n\n' + (e.stack || '');
       }
       return;
     }

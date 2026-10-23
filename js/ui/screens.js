@@ -63,8 +63,8 @@
     title: function () {
       var sc = show(
         '<div id="title-wrap">' +
-        '  <h1>HUNGRY FIN</h1>' +
-        '  <div class="tagline">Ocean Odyssey</div>' +
+        '  <h1>BRINEFIN</h1>' +
+        '  <div class="tagline">Eat. Grow. Survive.</div>' +
         '  <div class="row">' +
         '    <button class="btn btn-gold btn-big btn-pulse" id="bt-play">▶ &nbsp;Hunt</button>' +
         '  </div>' +
@@ -78,7 +78,7 @@
       );
       sc.classList.remove('dim');   // attract mode visible behind
       var best = HF.Save.data.stats.bestScore;
-      sc.querySelector('#tf-best').textContent = best > 0 ? ('Best score  ' + M.fmt(best)) : 'Eat. Grow. Survive.';
+      sc.querySelector('#tf-best').textContent = best > 0 ? ('Best score  ' + M.fmt(best)) : 'Your first bite is a few metres ahead.';
       sc.querySelector('#bt-play').addEventListener('click', function () { HF.Audio.play('confirm'); HF.Game.startRun(); });
       sc.querySelector('#bt-shop').addEventListener('click', function () { HF.Audio.play('click'); HF.Shop.open(); });
       sc.querySelector('#bt-daily').addEventListener('click', function () { HF.Audio.play('click'); HF.UIScreens.daily(); });
